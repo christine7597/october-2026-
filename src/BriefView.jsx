@@ -56,7 +56,7 @@ export default function BriefView({ input, brief }) {
         <h3>예상 대화 흐름</h3>
         <ol className="flow">
           {brief.flow.map((f, i) => (
-            <li key={i}><strong>{f.stage}</strong> — <Mark text={f.detail} /></li>
+            <li key={i}><strong>{String(f.stage).replace(/^\s*\d+[.)]\s*/, '')}</strong> — <Mark text={f.detail} /></li>
           ))}
         </ol>
       </section>
@@ -73,6 +73,17 @@ export default function BriefView({ input, brief }) {
           ))}
         </ul>
       </section>
+
+      {brief.sources?.length > 0 && (
+        <section>
+          <h3>참고한 출처</h3>
+          <ul className="muted" style={{ fontSize: 13 }}>
+            {brief.sources.map((s, i) => (
+              <li key={i}><a href={s.uri} target="_blank" rel="noreferrer">{s.title || s.uri}</a></li>
+            ))}
+          </ul>
+        </section>
+      )}
     </article>
   );
 }
