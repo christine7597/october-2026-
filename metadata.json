@@ -1,0 +1,34 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4JB0RW1NC6FFQ093ZAB07ZW",
+  "strategy": "manual-commit",
+  "branch": "claude/lucid-faraday-sxntvs",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".env.example",
+    "README.md",
+    "server/briefApi.js",
+    "src/App.jsx",
+    "src/BriefView.jsx",
+    "src/InputForm.jsx",
+    "src/Practice.jsx",
+    "src/storage.js",
+    "vite.config.js"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 42,
+    "cache_creation_tokens": 38907,
+    "cache_read_tokens": 2104463,
+    "output_tokens": 21377,
+    "api_call_count": 21
+  }
+}

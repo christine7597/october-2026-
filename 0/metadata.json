@@ -1,0 +1,45 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4JB0RW1NC6FFQ093ZAB07ZW",
+  "session_id": "28af0398-ef7b-5850-b574-c7f91b656a40",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-10T07:21:44.796665475Z",
+  "branch": "claude/lucid-faraday-sxntvs",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".env.example",
+    "README.md",
+    "server/briefApi.js",
+    "src/App.jsx",
+    "src/BriefView.jsx",
+    "src/InputForm.jsx",
+    "src/Practice.jsx",
+    "src/storage.js",
+    "vite.config.js"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "turn_id": "f75d9855bd1b",
+  "checkpoint_transcript_start": 98,
+  "transcript_lines_at_start": 98,
+  "compact_transcript_start": 15,
+  "token_usage": {
+    "input_tokens": 42,
+    "cache_creation_tokens": 38907,
+    "cache_read_tokens": 2104463,
+    "output_tokens": 21377,
+    "api_call_count": 21
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-10T07:21:44.661260313Z",
+    "agent_lines": 451,
+    "agent_removed": 8,
+    "human_added": 5,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 456,
+    "total_lines_changed": 465,
+    "agent_percentage": 98.70967741935483,
+    "metric_version": 2
+  }
+}
