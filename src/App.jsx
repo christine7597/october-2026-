@@ -66,12 +66,17 @@ export default function App() {
             <button className="ghost" onClick={() => setTab('practice')}>용어 연습하기 →</button>
           </div>
           {result.brief.sample && (
-            <p className="notice no-print">하드코딩된 샘플 브리프예요. 실제 생성은 "1. 입력"에서.</p>
+            <p className="notice no-print">저장된 샘플 브리프예요 (쿼드비/MOLDWORK, 2026-10-10 생성). 입력 칸에 같은 내용이 채워져 있으니 "1. 입력"에서 바로 다시 만들 수 있어요.</p>
           )}
-          {result.brief.searched === false && (
+          {result.brief.searched === false && !result.input.reference?.trim() && (
             <p className="notice no-print">
-              ⚠️ 웹 검색 없이 AI 지식만으로 만든 브리프예요. 회사 고유 정보(기능, 수치, 고객사)는 사실과 다를 수 있으니
-              노란 "확인 필요" 외의 회사 관련 문장도 한 번씩 확인하세요. 참고 자료를 붙여넣으면 정확도가 크게 올라가요.
+              ⚠️ 웹 검색도 참고 자료도 없이 AI 기억만으로 만든 브리프예요. 회사 고유 정보(기능, 수치, 고객사)는 틀릴 수 있어요.
+              회사 소개서나 기사 내용을 "참고 자료"에 붙여넣고 다시 만들면 정확도가 크게 올라가요.
+            </p>
+          )}
+          {result.brief.searched === false && result.input.reference?.trim() && (
+            <p className="notice no-print">
+              웹 검색 없이 붙여넣은 참고 자료 + AI 지식으로 만든 브리프예요. 참고 자료에 없던 회사 정보는 한 번 더 확인하세요.
             </p>
           )}
           <BriefView input={result.input} brief={result.brief} />

@@ -2,6 +2,7 @@
 // API 키는 여기(서버 쪽)에서만 .env로 읽는다. 브라우저 코드에는 절대 들어가지 않는다.
 import { GoogleGenAI } from '@google/genai';
 import { init, span, log } from 'neatlogs';
+import { wrapGoogleGenAI } from 'neatlogs/google-genai';
 
 function buildPrompt({ company, topic, direction, reference }) {
   const dir = direction === 'en-ko' ? '영어 → 한국어' : '한국어 → 영어';
@@ -27,9 +28,12 @@ ${reference ? `- 통역사가 받은 참고 자료:\n"""\n${reference}\n"""` : '
   "flow": [{"stage": "단계 이름", "detail": "이 단계에서 오갈 내용"}],
   "phrases": [{"ko": "한국어 표현", "en": "영어 표현", "when": "쓰는 상황 2~4단어"}]
 }
-- glossary: 20~30개. 이 미팅에서 실제로 나올 법한 회사/업계 용어 위주. 참고 자료에 나온 고유 용어 우선.
-- flow: 4~6단계.
-- phrases: 정확히 10개. 통역사가 현장에서 바로 쓸 수 있는 실전 표현(확인 요청, 숫자 확인, 이 업계 질문 등).`;
+- glossary: 20~30개. 이 미팅에서 실제로 귀에 들릴 용어(명사/고유명사) 위주. 참고 자료에 나온 고유 용어 우선. "~ 최적화", "~ 단축" 같은 일반 구절은 넣지 말 것. 한국어는 업계에서 실제 쓰는 말로.
+- flow: 4~6단계. stage에 번호를 붙이지 말 것.
+- phrases: 정확히 10개. 통역사가 현장에서 실제로 입으로 말할 문장만. "확인 필요"나 통역사 메모는 넣지 말 것.
+  - 6개: 이 미팅에서 나올 핵심 문장(회사 소개, 기능 설명, 상대의 예상 질문)의 모범 번역
+  - 4개: 통역사 운영 표현(다시 말씀 요청, 숫자/고유명사 확인, 속도 조절 등)
+- 맞춤법을 지킬 것.`;
 }
 
 // LLM 답에서 JSON만 꺼낸다 (가끔 ```json ... ``` 로 감싸서 줌)
@@ -51,24 +55,30 @@ function validate(b) {
 }
 
 export function briefApiPlugin(env) {
-  const model = env.GEMINI_MODEL || 'gemini-3.8-flash';
+  const primary = env.GEMINI_MODEL || 'gemini-3.8-flash';
+  // 메인 모델이 과부하(5xx)·할당량(429)이면 순서대로 다른 모델로 넘어감
+  const models = [...new Set([primary, 'gemini-3.5-flash', 'gemini-3.1-flash-lite'])];
   let ready = null;
 
   async function setup() {
     // neatlogs: 해커톤 LLM 호출 기록. 키가 없으면 기록만 꺼지고 앱은 정상 동작.
     if (env.NEATLOGS_API_KEY) {
       try {
-        await init({ apiKey: env.NEATLOGS_API_KEY, workflowName: 'brief-buddy', registerShutdownHandlers: false });
+        await init({ apiKey: env.NEATLOGS_API_KEY, workflowName: 'brief-buddy', registerShutdownHandlers: false, debug: env.NEATLOGS_DEBUG === '1' });
       } catch (e) {
         console.warn('[neatlogs] init 실패, 기록 없이 계속:', e.message);
       }
     }
-    const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
+    // wrapGoogleGenAI: neatlogs에 프롬프트/응답/토큰 수가 LLM 호출 단위로 기록됨
+    // timeout: 한 모델이 2분 넘게 안 답하면 포기하고 다음 모델로
+    const ai = wrapGoogleGenAI(new GoogleGenAI({ apiKey: env.GEMINI_API_KEY, httpOptions: { timeout: 120000 } }));
+    // 검색이 한 번 막히면(할당량 0 등) 서버를 다시 켤 때까지 검색 시도를 건너뜀
+    let searchBlocked = false;
 
     // 1차: 구글 검색으로 근거를 찾으며 생성 (지어내기 줄이기)
     const withSearch = span({ kind: 'TOOL', name: 'gemini-with-search' }, async (prompt) => {
       const res = await ai.models.generateContent({
-        model,
+        model: primary,
         contents: prompt,
         config: { tools: [{ googleSearch: {} }], temperature: 0.3 },
       });
@@ -76,33 +86,46 @@ export function briefApiPlugin(env) {
         .map((c) => c.web)
         .filter(Boolean)
         .map((w) => ({ title: w.title, uri: w.uri }));
-      return { text: res.text || '', sources };
+      return { brief: validate(extractJson(res.text || '')), sources, model: primary, searched: true };
     });
 
-    // 2차: 검색이 막힌 키(무료 할당량 0 등)면 검색 없이 생성
+    // 2차: 검색 없이 JSON 모드로 생성. 실패하면 다음 모델로.
     const withoutSearch = span({ kind: 'TOOL', name: 'gemini-no-search' }, async (prompt) => {
-      const res = await ai.models.generateContent({
-        model,
-        contents: prompt,
-        config: { responseMimeType: 'application/json', temperature: 0.3 },
-      });
-      return { text: res.text || '', sources: [] };
+      let lastErr;
+      for (const model of models) {
+        try {
+          const res = await ai.models.generateContent({
+            model,
+            contents: prompt,
+            config: { responseMimeType: 'application/json', temperature: 0.3 },
+          });
+          return { brief: validate(extractJson(res.text || '')), sources: [], model, searched: false };
+        } catch (e) {
+          lastErr = e;
+          // 키가 틀림(400/401/403) 같은 건 다른 모델로 바꿔도 안 되니 바로 중단
+          if (e.status && e.status < 500 && e.status !== 429 && e.status !== 404) throw e;
+          log('{model} 실패 → 다음 모델: {msg}', { model, msg: String(e.message).slice(0, 120) });
+        }
+      }
+      throw lastErr;
     });
 
     const generateBrief = span({ kind: 'WORKFLOW', name: 'generate-brief' }, async (input) => {
       const prompt = buildPrompt(input);
-      let out;
-      let searched = true;
-      try {
-        out = await withSearch(prompt);
-      } catch (e) {
-        log('검색 생성 실패 → 검색 없이 재시도: {msg}', { msg: e.message?.slice(0, 120) });
-        searched = false;
-        out = await withoutSearch(prompt);
+      let out = null;
+      if (!searchBlocked) {
+        try {
+          out = await withSearch(prompt);
+        } catch (e) {
+          log('검색 생성 실패 → 검색 없이 진행: {msg}', { msg: String(e.message).slice(0, 120) });
+          if (e.status === 429 || e.status === 403) searchBlocked = true;
+        }
       }
-      const brief = validate(extractJson(out.text));
+      if (!out) out = await withoutSearch(prompt);
+      const brief = out.brief;
       brief.sources = out.sources;
-      brief.searched = searched;
+      brief.searched = out.searched;
+      brief.model = out.model;
       return brief;
     });
     return generateBrief;

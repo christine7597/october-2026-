@@ -17,6 +17,7 @@ export default function BriefView({ input, brief }) {
         <h2>{input.company}</h2>
         <p className="muted">
           {input.topic} · {dirLabel}
+          {brief.model && <span className="no-print"> · {brief.model}</span>}
         </p>
       </header>
 

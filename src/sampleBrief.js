@@ -1,68 +1,205 @@
-// 화면 확인용 하드코딩 샘플. LLM 연결 전/키가 없을 때 이 데이터로 화면을 띄운다.
+// 하드코딩 샘플 (월요일 실제 케이스). 키가 없어도 화면/연습을 확인할 수 있다.
+// 2026-10-10: docs/quadbe-moldwork-reference.md 의 확인된 사실을 참고 자료로 넣고 Gemini로 생성한 결과.
 export const sampleInput = {
-  company: '쿼드비 (Quad.BE)',
-  topic: '화장품 패키징 플랫폼 MOLDWORK 관련 미팅',
-  direction: 'ko-en',
-  reference: '',
+  "company": "쿼드비 (Quad.BE)",
+  "topic": "화장품 패키징 플랫폼 MOLDWORK 관련 미팅",
+  "direction": "ko-en",
+  "reference": "[언론 보도로 확인된 사실]\n- 회사: ㈜쿼드비 (Quad.BE Co., Ltd.), 대표 박성민. 원래 XR/3D 시각화 기술 회사로 소개됨 (2024.11 인천 XR·메타버스 투자 IR 데모데이 참가, 2025 XR & Metaverse Fair Tokyo 참가).\n- 제품: MOLDWORK(몰드웍) — 화장품 패키징 개발을 디지털로 옮기는 \"패키징 DX 플랫폼\". 회사 표현: \"마지막 아날로그(the last analog sector)를 디지털로\".\n- 기능 흐름: 전 세계 화장품 용기 패키징 검색 → 부품 조합 → 3D 시뮬레이션 → 제조 사양서(technical specification) 전달까지 하나의 워크플로우.\n- 핵심 기술: 제조사가 서로 다른 이기종 부품(용기·캡·펌프 등)의 결합 가능성(호환성)을 자동 분석·추천.\n- 해결하려는 문제: 기존 협업은 이메일·문서·실물 샘플 중심 → 반복 수정, 샘플 제작, 제조사 소통 비효율.\n- 2025.6.24 아모레퍼시픽과 MOLDWORK 정식 공급 계약 (2025.7.10 발표). 신제품 기획, 용기 디자인, 마케팅 시각화에 활용 계획. 제품 기획 → 3D 시뮬레이션 실시간 검증 → 생산 연계 → 디지털 커머스까지의 협업 모델.\n- 2026.6.17~20 파리 VIVATECH 2026 출품. 로레알, 샤넬, LVMH 관계자 부스 방문 (회사 측/언론 보도). 로레알 공급 용기 기반 \"MOLDWORK 데모 버전\" 제공해 로레알 본사와 프로젝트 가능성 논의 계획. 프랑스에서 PoC 추진 계획 (명희상 책임 인터뷰).\n- 한 프랑스 기사: 리드타임 50% 이상 단축(회사 주장 수치), 2026.5부터 아모레퍼시픽 브랜드 전반에 도입, LG생활건강 포함 국내 고객 17곳 (단일 기사 — 확인 필요).\n\n[확인 안 된 것]\n- 설립 연도, 투자 금액/투자사, 계약 금액, 과금 방식(수수료/구독), 로레알 PoC 진행 결과, 이번 미팅 상대방과 목적."
 };
 
 export const sampleBrief = {
-  summary:
-    '쿼드비(Quad.BE)는 화장품 패키징(용기·부자재) 분야에서 MOLDWORK라는 플랫폼을 운영하는 회사로 보임 — 정확한 사업 모델(중개/제조/SaaS)은 확인 필요.',
-  background: [
-    '화장품 패키징은 용기(병·튜브·자·컴팩트)와 부자재(펌프·캡·스포이드)로 나뉘며, 브랜드사는 보통 OEM/ODM사와 패키징 업체를 따로 상대한다.',
-    '용기 제작은 금형(mold) 제작 → 사출/블로우 성형 → 후가공(도장·증착·인쇄) 순서로 진행되며, 금형 비용과 리드타임이 핵심 협상 포인트다.',
-    '신규 금형 대신 기성 금형(stock mold)을 쓰면 비용·기간이 줄어든다 — MOLDWORK가 금형 데이터/매칭을 다루는지 확인 필요.',
-    '인디 브랜드 증가로 소량 다품종(낮은 MOQ) 수요가 커졌고, 친환경(PCR·단일소재·리필) 요구가 강해지는 추세.',
-    '회사 설립 연도, 투자 단계, 주요 고객사, 해외 진출 현황은 확인 필요.',
+  "summary": "쿼드비(Quad.BE)는 화장품 패키징 개발 프로세스를 3D 시뮬레이션 및 부품 호환성 분석 기술로 디지털 전환(DX)하는 플랫폼 'MOLDWORK(몰드웍)'을 개발한 기업이다.",
+  "background": [
+    "㈜쿼드비(대표 박성민)는 XR 및 3D 시각화 기술 기반으로 출발하여, 아날로그 중심의 화장품 패키징 시장을 디지털화하는 플랫폼 MOLDWORK를 선보였다.",
+    "MOLDWORK의 핵심 기술은 제조사가 서로 다른 용기·캡·펌프 등 이기종 부품의 결합 호환성을 자동으로 분석하고 추천하는 기능이다.",
+    "2025년 아모레퍼시픽과 정식 공급 계약을 체결하여 제품 기획, 용기 디자인, 실시간 검증 등 전 과정에 걸친 협업 모델을 구축했다.",
+    "VIVATECH 2026 참가를 계기로 로레알 등 글로벌 뷰티 브랜드와의 PoC 추진 계획을 밝혔으나, 실제 진행 결과는 확인 필요하다.",
+    "회사의 설립 연도, 누적 투자 금액, 과금 모델(구독형/수수료형), LG생활건강 포함 17개 고객사 확보 여부 및 이번 미팅 상대방은 확인 필요하다."
   ],
-  glossary: [
-    { en: 'Mold / Tooling', ko: '금형', note: '용기를 찍어내는 틀. 비용이 크고 제작 기간이 김' },
-    { en: 'Stock mold', ko: '기성 금형', note: '이미 존재하는 금형. 신규 개발보다 싸고 빠름' },
-    { en: 'Custom mold', ko: '신규(전용) 금형', note: '브랜드 전용으로 새로 만드는 금형' },
-    { en: 'Injection molding', ko: '사출 성형', note: '녹인 수지를 금형에 주입해 성형 (캡, 자 등)' },
-    { en: 'Blow molding', ko: '블로우 성형', note: '공기를 불어넣어 병 형태로 성형' },
-    { en: 'MOQ (Minimum Order Quantity)', ko: '최소 주문 수량', note: '한 번에 주문해야 하는 최소 수량' },
-    { en: 'Lead time', ko: '리드타임 / 납기', note: '발주부터 납품까지 걸리는 기간' },
-    { en: 'Primary packaging', ko: '1차 포장재', note: '내용물과 직접 닿는 용기' },
-    { en: 'Secondary packaging', ko: '2차 포장재', note: '단상자 등 외부 포장' },
-    { en: 'Pump dispenser', ko: '펌프', note: '로션·세럼용 부자재' },
-    { en: 'Airless pump', ko: '에어리스 펌프', note: '공기 유입을 막아 내용물 산화 방지' },
-    { en: 'Dropper', ko: '스포이드', note: '앰플·오일용 부자재' },
-    { en: 'Cap / Closure', ko: '캡 / 마개', note: '' },
-    { en: 'Jar', ko: '자(크림 용기)', note: '입구가 넓은 크림용 용기' },
-    { en: 'Tube', ko: '튜브', note: '' },
-    { en: 'Compact', ko: '콤팩트', note: '쿠션·파우더용 용기' },
-    { en: 'Metallizing / Vacuum deposition', ko: '증착', note: '금속 느낌을 내는 후가공' },
-    { en: 'Silk screen printing', ko: '실크 인쇄', note: '용기 표면 인쇄 방식' },
-    { en: 'Hot stamping', ko: '박(핫스탬핑)', note: '금·은박을 열로 찍는 후가공' },
-    { en: 'PCR (Post-Consumer Recycled)', ko: 'PCR 재생 소재', note: '소비자 사용 후 재활용 원료' },
-    { en: 'Mono-material', ko: '단일 소재', note: '재활용 쉽게 한 가지 소재로만 구성' },
-    { en: 'Refill', ko: '리필', note: '' },
-    { en: 'OEM / ODM', ko: 'OEM / ODM', note: '주문자 상표 생산 / 제조사 개발 생산' },
-    { en: 'Brand owner', ko: '브랜드사', note: '' },
-    { en: 'Sourcing', ko: '소싱', note: '공급처를 찾고 선정하는 일' },
-    { en: 'Sample / Prototype', ko: '샘플 / 시제품', note: '' },
-    { en: 'Unit price', ko: '단가', note: '' },
-    { en: 'Platform fee / Commission', ko: '플랫폼 수수료', note: 'MOLDWORK 과금 방식은 확인 필요' },
+  "glossary": [
+    {
+      "en": "Quad.BE",
+      "ko": "쿼드비",
+      "note": "MOLDWORK를 개발한 3D/XR 기술 기반 스타트업"
+    },
+    {
+      "en": "MOLDWORK",
+      "ko": "몰드웍",
+      "note": "쿼드비의 화장품 패키징 DX 플랫폼"
+    },
+    {
+      "en": "packaging DX",
+      "ko": "패키징 디지털 전환",
+      "note": "아날로그 패키징 개발 전 과정을 디지털로 전환하는 것"
+    },
+    {
+      "en": "heterogeneous parts",
+      "ko": "이기종 부품",
+      "note": "제조사나 규격이 서로 다른 부품군"
+    },
+    {
+      "en": "compatibility analysis",
+      "ko": "호환성 분석",
+      "note": "용기, 캡, 펌프 등 부품 간 결합 가능 여부를 분석하는 기술"
+    },
+    {
+      "en": "technical specification",
+      "ko": "제조 사양서",
+      "note": "금형 및 패키징 제작에 필요한 세부 규격 문서"
+    },
+    {
+      "en": "physical sample",
+      "ko": "실물 샘플",
+      "note": "패키징 검증을 위해 실제로 제작하는 견본"
+    },
+    {
+      "en": "lead time",
+      "ko": "리드타임",
+      "note": "제품 기획부터 실물 생산까지 소요되는 총 기간"
+    },
+    {
+      "en": "container / bottle",
+      "ko": "용기",
+      "note": "내용물을 담는 본체 용기"
+    },
+    {
+      "en": "pump dispenser",
+      "ko": "펌프",
+      "note": "내용물을 토출하는 펌프형 부속품"
+    },
+    {
+      "en": "cap / closure",
+      "ko": "캡",
+      "note": "용기 입구를 밀폐하는 뚜껑 부품"
+    },
+    {
+      "en": "3D simulation",
+      "ko": "3D 시뮬레이션",
+      "note": "가상 공간에서 패키징 결합 및 외관을 검증하는 기술"
+    },
+    {
+      "en": "rendering",
+      "ko": "렌더링",
+      "note": "3D 모델을 실제 질감과 조명에 맞춰 시각화하는 과정"
+    },
+    {
+      "en": "mold",
+      "ko": "금형",
+      "note": "플라스틱 용기 및 부품을 사출 성형하기 위한 틀"
+    },
+    {
+      "en": "injection molding",
+      "ko": "사출 성형",
+      "note": "용융 플라스틱을 금형에 주입해 부품을 만드는 공정"
+    },
+    {
+      "en": "proof of concept (PoC)",
+      "ko": "개념 검증",
+      "note": "도입 전 기술의 실현 가능성과 효과를 검증하는 단계"
+    },
+    {
+      "en": "pilot project",
+      "ko": "파일럿 프로젝트",
+      "note": "정식 도입 전 소규모로 시험 적용하는 프로젝트"
+    },
+    {
+      "en": "workflow",
+      "ko": "워크플로우",
+      "note": "검색부터 사양서 전달까지 이어지는 작업 흐름"
+    },
+    {
+      "en": "tolerance",
+      "ko": "공차",
+      "note": "부품 결합 시 허용되는 물리적 오차 범위"
+    },
+    {
+      "en": "primary packaging",
+      "ko": "1차 포장",
+      "note": "화장품 내용물과 직접 닿는 용기 및 펌프"
+    },
+    {
+      "en": "secondary packaging",
+      "ko": "2차 포장",
+      "note": "단상자 등 1차 용기를 감싸는 외부 포장재"
+    },
+    {
+      "en": "extended reality (XR)",
+      "ko": "확장현실",
+      "note": "가상현실과 증강현실을 아우르는 쿼드비의 기반 기술"
+    }
   ],
-  flow: [
-    { stage: '인사·소개', detail: '참석자 소개, 쿼드비와 MOLDWORK 한 줄 소개' },
-    { stage: '문제 정의', detail: '브랜드사의 패키징 소싱이 어려운 이유(금형 비용, MOQ, 리드타임)' },
-    { stage: '플랫폼 설명', detail: 'MOLDWORK 작동 방식, 보유 금형/공급사 네트워크 — 세부 기능 확인 필요' },
-    { stage: '질의응답', detail: '단가, MOQ, 납기, 품질관리, 해외 배송/인증 관련 질문 예상' },
-    { stage: '다음 단계', detail: '샘플 요청, 견적, 후속 미팅 일정 합의' },
+  "flow": [
+    {
+      "stage": "회사 및 플랫폼 개요 소개",
+      "detail": "쿼드비 기업 배경, MOLDWORK 개발 취지, 아날로그 화장품 패키징 시장의 비효율 개선 목적 설명"
+    },
+    {
+      "stage": "핵심 기술 및 솔루션 시연",
+      "detail": "글로벌 용기 검색, 이기종 부품 호환성 자동 분석, 실시간 3D 결합 시뮬레이션 및 제조 사양서 추출 과정 시연"
+    },
+    {
+      "stage": "도입 레퍼런스 및 기대 효과 공유",
+      "detail": "아모레퍼시픽 공급 사례 소개, 리드타임 단축 및 실물 샘플 제작 비용 절감 효과 논의"
+    },
+    {
+      "stage": "협업 모델 및 질의응답",
+      "detail": "플랫폼 도입 방식, 데모 버전 제공, PoC 추진 일정 및 과금 체계 등 기술/사업적 질문 답변"
+    },
+    {
+      "stage": "향후 일정 및 다음 단계 조율",
+      "detail": "실무 검토 일정, PoC 대상 프로젝트 선정, 후속 미팅 일정 확정"
+    }
   ],
-  phrases: [
-    { ko: '말씀하신 수치를 한 번만 다시 확인해 주시겠어요?', en: 'Could you confirm that figure once more?', when: '숫자 확인' },
-    { ko: '정확한 용어를 확인 중입니다. 잠시만요.', en: 'Let me confirm the exact term — one moment.', when: '용어 막힐 때' },
-    { ko: '통역사가 확인을 위해 질문드립니다.', en: 'The interpreter would like to ask a clarifying question.', when: '통역사 개입' },
-    { ko: '조금 천천히 말씀해 주시겠어요?', en: 'Could you speak a little more slowly, please?', when: '속도 조절' },
-    { ko: '문장을 나눠서 말씀해 주시면 정확히 전달하겠습니다.', en: 'If you could pause between sentences, I can relay it more accurately.', when: '긴 발화' },
-    { ko: '최소 주문 수량이 어떻게 되나요?', en: 'What is the minimum order quantity?', when: 'MOQ 질문' },
-    { ko: '금형 비용은 별도인가요?', en: 'Is the tooling cost charged separately?', when: '비용 질문' },
-    { ko: '샘플 제작까지 얼마나 걸리나요?', en: 'How long does it take to produce a sample?', when: '리드타임' },
-    { ko: '기성 금형으로 진행 가능한지 검토 부탁드립니다.', en: 'Could you check whether we can proceed with a stock mold?', when: '옵션 제안' },
-    { ko: '오늘 논의 내용을 정리해서 메일로 보내드리겠습니다.', en: "We'll summarize today's discussion and follow up by email.", when: '마무리' },
-  ],
+  "phrases": [
+    {
+      "ko": "MOLDWORK는 아날로그 방식에 머물러 있던 화장품 패키징 개발 프로세스를 디지털로 전환하는 플랫폼입니다.",
+      "en": "MOLDWORK is a platform that digitalizes the cosmetics packaging development process, which has traditionally remained analog.",
+      "when": "플랫폼 핵심 소개"
+    },
+    {
+      "ko": "저희 핵심 기술은 제조사가 서로 다른 용기, 캡, 펌프 등 이기종 부품의 결합 호환성을 자동으로 분석하는 것입니다.",
+      "en": "Our core technology automatically analyzes the compatibility of heterogeneous parts, such as bottles, caps, and pumps from different manufacturers.",
+      "when": "핵심 기술 설명"
+    },
+    {
+      "ko": "3D 시뮬레이션을 통해 실물 샘플 제작 횟수와 개발 리드타임을 대폭 단축할 수 있습니다.",
+      "en": "Through 3D simulation, we can significantly reduce physical sample production and overall development lead time.",
+      "when": "도입 효과 설명"
+    },
+    {
+      "ko": "부품 검색부터 3D 검증, 제조 사양서 전달까지 단일 워크플로우로 지원합니다.",
+      "en": "We support a single, seamless workflow from part discovery and 3D validation to technical specification delivery.",
+      "when": "워크플로우 기능 설명"
+    },
+    {
+      "ko": "기존 공급업체의 CAD 데이터나 부품 사양도 플랫폼에 연동할 수 있습니까?",
+      "en": "Can CAD data or part specifications from our existing suppliers also be integrated into the platform?",
+      "when": "상대측 호환성 질의"
+    },
+    {
+      "ko": "본격적인 도입에 앞서 특정 브랜드 제품군을 대상으로 PoC를 먼저 진행하고 싶습니다.",
+      "en": "Prior to full-scale adoption, we would like to conduct a PoC on a specific brand product line first.",
+      "when": "협력 방식 제안"
+    },
+    {
+      "ko": "방금 말씀하신 수치를 다시 한번 확인해 주시겠습니까?",
+      "en": "Could you please confirm the figure you just mentioned once more?",
+      "when": "수치 재확인 시"
+    },
+    {
+      "ko": "통역을 위해 말씀 속도를 조금만 늦춰 주시면 감사하겠습니다.",
+      "en": "Could you please slow down a little bit for the interpretation?",
+      "when": "발화 속도 조절"
+    },
+    {
+      "ko": "고유명사 확인을 위해 스펠링을 다시 말씀해 주시겠습니까?",
+      "en": "Could you please spell out that proper noun so I can ensure accuracy?",
+      "when": "고유명사 확인 시"
+    },
+    {
+      "ko": "원활한 통역 전달을 위해 잠시 끊어서 말씀해 주시겠습니까?",
+      "en": "Could you please pause for a moment so I can interpret accurately?",
+      "when": "발화 끊김 요청"
+    }
+  ]
 };
