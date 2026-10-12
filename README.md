@@ -32,7 +32,7 @@ npm run dev               # 브라우저에서 http://localhost:5173 열기
   실제로 쿼드비 케이스에서 참고 자료 없이 만들면 MOLDWORK 기능을 "금형 매칭/견적 비교"로 잘못 추측했고,
   확인된 사실을 넣자 "이기종 부품 호환성 분석 → 3D 시뮬레이션 → 제조 사양서"로 정확해졌습니다.
   → [docs/quadbe-moldwork-reference.md](docs/quadbe-moldwork-reference.md) (출처 포함)
-- 메인 모델(기본 `gemini-3.8-flash`)이 과부하/할당량 초과면 `gemini-3.5-flash` → `gemini-3.1-flash-lite` 순으로 자동 전환합니다. 어떤 모델이 만들었는지는 브리프 제목 아래 작게 표시됩니다.
+- 메인 모델(기본 `gemini-3.8-flash`)이 과부하/할당량 초과면 `gemini-3.5-flash` → `gemini-3.5-flash-lite` → `gemini-3.1-flash-lite` 순으로 자동 전환합니다. 어떤 모델이 만들었는지는 브리프 제목 아래 작게 표시됩니다.
 - 생성에는 보통 30초~1분 걸립니다.
 
 ## 구조

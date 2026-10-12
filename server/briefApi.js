@@ -57,7 +57,7 @@ function validate(b) {
 export function briefApiPlugin(env) {
   const primary = env.GEMINI_MODEL || 'gemini-3.8-flash';
   // 메인 모델이 과부하(5xx)·할당량(429)이면 순서대로 다른 모델로 넘어감
-  const models = [...new Set([primary, 'gemini-3.5-flash', 'gemini-3.1-flash-lite'])];
+  const models = [...new Set([primary, 'gemini-3.5-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite'])];
   let ready = null;
 
   async function setup() {
@@ -104,6 +104,7 @@ export function briefApiPlugin(env) {
           lastErr = e;
           // 키가 틀림(400/401/403) 같은 건 다른 모델로 바꿔도 안 되니 바로 중단
           if (e.status && e.status < 500 && e.status !== 429 && e.status !== 404) throw e;
+          console.warn(`[brief-api] ${model} 실패 (${e.status ?? e.name}) → 다음 모델`);
           log('{model} 실패 → 다음 모델: {msg}', { model, msg: String(e.message).slice(0, 120) });
         }
       }
