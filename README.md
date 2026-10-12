@@ -1,3 +1,4 @@
+English version: [README_EN.md](README_EN.md)
 # Brief Buddy
 
 한국어-영어 프리랜서 통역사가 **통역 전날 밤 20분 안에** 준비를 끝내도록 돕는 작은 웹앱 (neatHack).
