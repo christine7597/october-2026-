@@ -9,6 +9,26 @@
 
 로그인·DB 없음. 마지막 입력과 브리프는 브라우저(localStorage)에만 저장됩니다.
 
+## 심사위원 안내
+
+**미리보기 (설치 없이 브라우저에서 바로):** https://claude.ai/artifact/2w9PBpwEgQM1Z2tv8xkuDM
+
+| 미리보기에서 | 되는 것 |
+|---|---|
+| 샘플 브리프 (쿼드비 / MOLDWORK 실제 케이스) | ✅ 열자마자 보임 |
+| 1. 입력 / 2. 브리프 / 3. 연습 탭, 플래시카드 맞음·틀림 | ✅ 누구나 |
+| "브리프 만들기" | ⚠️ 미리보기에서는 Gemini 대신 **보는 사람의 Claude 계정**으로 생성해요. claude.ai에 로그인하고 첫 클릭 때 허용해야 동작하고, 아니면 안내 문구만 떠요 |
+| 인쇄 / PDF 저장 | ❌ claude.ai 화면 안에서는 인쇄 창이 열리지 않아 숨겼어요 |
+
+**전체 기능(Gemini 생성, 모델 자동 전환, 인쇄)** 은 아래 [실행 방법](#실행-방법)대로 로컬에서 확인할 수 있어요. 키가 없어도 "샘플 브리프 보기"와 연습은 동작합니다.
+
+**작업 기록**
+- 개발 과정은 Claude Code로 진행했고, Entire 체크포인트 8개가 이 저장소의 `refs/entire/checkpoints/*`에 올라가 있어요.
+  로컬에서 보려면 `git fetch origin 'refs/entire/*:refs/entire/*'` 후 `entire checkpoint list`.
+- LLM 호출은 neatlogs로 기록됩니다 ([아래](#neatlogs-기록-해커톤) 참고).
+- 실제 케이스 검증: 참고 자료 없이 만든 브리프가 회사 기능을 잘못 추측한 것을 웹 기사와 대조해 찾아냈고,
+  확인된 사실만 [docs/quadbe-moldwork-reference.md](docs/quadbe-moldwork-reference.md)에 출처와 함께 정리해 샘플에 반영했어요.
+
 ## 실행 방법
 
 필요한 것: [Node.js](https://nodejs.org) 20 이상
@@ -52,6 +72,8 @@ src/InputForm.jsx    기능 1 입력
 src/BriefView.jsx    기능 2 브리프 화면 (+인쇄 스타일)
 src/Practice.jsx     기능 3 플래시카드
 src/sampleBrief.js   하드코딩 샘플 (쿼드비 / MOLDWORK)
+src/prompt.js        브리프 생성 프롬프트 (서버와 미리보기가 같이 씀)
 ```
 
 `npm run dev` 로만 동작합니다 (API가 개발 서버 안에 있음).
+미리보기는 `VITE_PREVIEW=1 npx vite build --base ./`로 만든 별도 빌드입니다.
