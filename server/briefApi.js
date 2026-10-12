@@ -3,38 +3,8 @@
 import { GoogleGenAI } from '@google/genai';
 import { init, span, log } from 'neatlogs';
 import { wrapGoogleGenAI } from 'neatlogs/google-genai';
+import { buildPrompt } from '../src/prompt.js';
 
-function buildPrompt({ company, topic, direction, reference }) {
-  const dir = direction === 'en-ko' ? '영어 → 한국어' : '한국어 → 영어';
-  return `너는 한국어-영어 프리랜서 통역사의 사전 준비를 돕는 리서치 어시스턴트다.
-내일 통역 일을 위한 한 화면짜리 브리프를 만들어라.
-
-[통역 정보]
-- 회사명: ${company}
-- 행사/미팅 주제: ${topic}
-- 통역 방향: ${dir}
-${reference ? `- 통역사가 받은 참고 자료:\n"""\n${reference}\n"""` : '- 참고 자료: 없음'}
-
-[가장 중요한 규칙 — 지어내지 말 것]
-- 회사에 대한 사실(설립연도, 투자, 고객사, 제품 기능, 수치, 인명)은 검색 결과나 참고 자료에서 확인된 것만 쓴다.
-- 확인되지 않은 내용은 추측하지 말고 문장 안에 "확인 필요"라고 명시한다. 예: "주요 고객사는 확인 필요."
-- 업계 일반 지식(용어 정의 등)은 써도 되지만, 회사 고유의 사실과 섞지 않는다.
-
-[출력 형식] 아래 JSON 하나만 출력한다. 마크다운, 설명 문장 금지.
-{
-  "summary": "회사/업계 한 줄 요약 (한국어)",
-  "background": ["꼭 알아야 할 배경 문장", "... 정확히 5개"],
-  "glossary": [{"en": "영어 용어", "ko": "한국어 용어", "note": "한 줄 설명 (한국어)"}],
-  "flow": [{"stage": "단계 이름", "detail": "이 단계에서 오갈 내용"}],
-  "phrases": [{"ko": "한국어 표현", "en": "영어 표현", "when": "쓰는 상황 2~4단어"}]
-}
-- glossary: 20~30개. 이 미팅에서 실제로 귀에 들릴 용어(명사/고유명사) 위주. 참고 자료에 나온 고유 용어 우선. "~ 최적화", "~ 단축" 같은 일반 구절은 넣지 말 것. 한국어는 업계에서 실제 쓰는 말로.
-- flow: 4~6단계. stage에 번호를 붙이지 말 것.
-- phrases: 정확히 10개. 통역사가 현장에서 실제로 입으로 말할 문장만. "확인 필요"나 통역사 메모는 넣지 말 것.
-  - 6개: 이 미팅에서 나올 핵심 문장(회사 소개, 기능 설명, 상대의 예상 질문)의 모범 번역
-  - 4개: 통역사 운영 표현(다시 말씀 요청, 숫자/고유명사 확인, 속도 조절 등)
-- 맞춤법을 지킬 것.`;
-}
 
 // LLM 답에서 JSON만 꺼낸다 (가끔 ```json ... ``` 로 감싸서 줌)
 function extractJson(text) {
