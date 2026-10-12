@@ -72,8 +72,9 @@ export function briefApiPlugin(env) {
     // wrapGoogleGenAI: neatlogs에 프롬프트/응답/토큰 수가 LLM 호출 단위로 기록됨
     // timeout: 한 모델이 2분 넘게 안 답하면 포기하고 다음 모델로
     const ai = wrapGoogleGenAI(new GoogleGenAI({ apiKey: env.GEMINI_API_KEY, httpOptions: { timeout: 120000 } }));
-    // 검색이 한 번 막히면(할당량 0 등) 서버를 다시 켤 때까지 검색 시도를 건너뜀
-    let searchBlocked = false;
+    // 검색이 한 번 막히면(할당량 0 등) 서버를 다시 켤 때까지 검색 시도를 건너뜀.
+    // GEMINI_SEARCH=off 면 처음부터 검색을 시도하지 않음 (검색 할당량이 없는 키용)
+    let searchBlocked = env.GEMINI_SEARCH === 'off';
 
     // 1차: 구글 검색으로 근거를 찾으며 생성 (지어내기 줄이기)
     const withSearch = span({ kind: 'TOOL', name: 'gemini-with-search' }, async (prompt) => {

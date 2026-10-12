@@ -35,6 +35,14 @@ npm run dev               # 브라우저에서 http://localhost:5173 열기
 - 메인 모델(기본 `gemini-3.8-flash`)이 과부하/할당량 초과면 `gemini-3.5-flash` → `gemini-3.5-flash-lite` → `gemini-3.1-flash-lite` 순으로 자동 전환합니다. 어떤 모델이 만들었는지는 브리프 제목 아래 작게 표시됩니다.
 - 생성에는 보통 30초~1분 걸립니다.
 
+## neatlogs 기록 (해커톤)
+
+- `.env`에 `NEATLOGS_API_KEY`를 넣으면 브리프를 만들 때마다 neatlogs에 기록이 남습니다:
+  `generate-brief`(전체) → `gemini-with-search` / `gemini-no-search` → Gemini 호출(프롬프트·응답·토큰 수).
+- 키에 구글 검색 할당량이 없으면 `.env`에 `GEMINI_SEARCH=off`를 넣으세요. 실패하는 검색 시도가 빠져 기록이 깔끔해집니다.
+- 2026-10-12 `npx @neatlogs/wizard verify`로 기록이 neatlogs 서버에 저장되는 것까지 확인했습니다.
+- `scripts/cloud-proxy-preload.cjs`는 Claude Code 클라우드 컨테이너 전용 보정입니다(일반 PC에서는 동작 안 함).
+
 ## 구조
 
 ```
