@@ -93,3 +93,13 @@ Uncalled public functions (8) — MAY be library/API entry points or just dead c
 A skill is installed at .claude/skills/neatlogs-ts-openai.
 Read .claude/skills/neatlogs-ts-openai/SKILL.md ONCE for the one-time setup (install, init, env, global wrap/handler).
 Do NOT read every reference file up front — open a specific reference ONLY if you personally need it for the global wiring. The per-file span work is delegated to instrumentor subagents (which are self-contained and must NOT read the skill).
+
+---
+
+<task-notification>
+<task-id>by9afc2o3</task-id>
+<tool-use-id>toolu_01Lz6xgbLWd6zZ7QX1rGg6Kv</tool-use-id>
+<output-file>/tmp/claude-0/-home-user-october-2026-/28af0398-ef7b-5850-b574-c7f91b656a40/tasks/by9afc2o3.output</output-file>
+<status>completed</status>
+<summary>Background command "Run neatlogs wizard in non-interactive mode" completed (exit code 0)</summary>
+</task-notification>
